@@ -6,60 +6,36 @@
 //
 
 import Foundation
+//
+// MARK: - Recipe Data Manager
+//
 
+/// Clas Recipe Data Manager
+/// The only class called by the view. Manage all the Recipe, offline and online.
 class RecipeDataManager {
-    
-
-    private var mode: Mode = .offline
-    
+    //
+    // MARK: - Variables And Properties
+    //
     static var shared = RecipeDataManager()
     
-    private init() {}
+    private var mode: Mode = .offline
     
     var displayableList: [Recipe] = []
-    
     var selectedRecipe: Recipe?
     
+    //
+    // MARK: - Initialization
+    //
+    private init() {}
+    
+    //
+    // MARK: - Internal Methods
     func setMode(mode: Mode) {
         self.mode = mode
     }
     
     func setSelectedRecipe(_ selectedItem: Recipe) {
         selectedRecipe = selectedItem
-    }
-    
-    func getRecipies(_ requestStatus: RequestStatus, successHandler: @escaping() -> Void, errorHandler: @escaping(String) -> Void) {
-        switch requestStatus {
-        case .initial :
-            displayableList.removeAll()
-            print(displayableList)
-            if mode == .online {
-                NetworkingClient.shared.fetchData(requestStatus, successHandler: { recipies in
-                    self.displayableList = recipies
-                    successHandler()
-                }, errorHandler: { error in
-                   return errorHandler(error)
-                })
-            }
-            if mode == .offline {
-                CoreDataManager.shared.fetchData(requestStatus, successHandler: { recipies in
-                    self.displayableList = recipies
-                    successHandler()
-                }, errorHandler: { error in
-                   return errorHandler(error)
-                })
-            }
-            
-        case .following :
-            if mode == .online {
-            NetworkingClient.shared.fetchData(requestStatus, successHandler: { recipies in
-                self.displayableList.append(contentsOf: recipies)
-                successHandler()
-            }, errorHandler: { error in
-              return  errorHandler(error)
-            })
-            }
-        }
     }
     
     func checkFavoriteStatus() {
@@ -71,6 +47,40 @@ class RecipeDataManager {
             CoreDataManager.shared.deleteRecipe(name: selectedRecipe!.name)
         } else {
             return
+        }
+    }
+    
+    func getRecipies(_ requestStatus: RequestStatus, successHandler: @escaping() -> Void, errorHandler: @escaping(String) -> Void) {
+        switch requestStatus {
+        case .initial :
+            displayableList.removeAll()
+            print(displayableList)
+            if mode == .online {
+                NetworkManager.shared.fetchRecipe(requestStatus, successHandler: { recipies in
+                    self.displayableList = recipies
+                    successHandler()
+                }, errorHandler: { error in
+                   return errorHandler(error)
+                })
+            }
+            if mode == .offline {
+                CoreDataManager.shared.fetchRecipe(requestStatus, successHandler: { recipies in
+                    self.displayableList = recipies
+                    successHandler()
+                }, errorHandler: { error in
+                   return errorHandler(error)
+                })
+            }
+            
+        case .following :
+            if mode == .online {
+            NetworkManager.shared.fetchRecipe(requestStatus, successHandler: { recipies in
+                self.displayableList.append(contentsOf: recipies)
+                successHandler()
+            }, errorHandler: { error in
+              return  errorHandler(error)
+            })
+            }
         }
     }
 }

@@ -7,68 +7,49 @@
 
 import Foundation
 import Alamofire
+//
+// MARK: - Network Manager
+//
 
-class NetworkingClient {
-    
-    static var shared = NetworkingClient()
-    
-    private init() {}
-        
+///Class Network Manager
+///Make the API calls, generate the ingredients list for the request, manage the Ingredients used for the TableView
+///Parse the JSON response into a Decoder and create the Recipe array
+class NetworkManager {
+    //
+    // MARK: - Constant
+    //
     static let parameters = [
         "app_id": ApiToken.edamamId, "app_key": ApiToken.edamamKey,
-        "q": NetworkingClient.shared.makeIngredientsList(), "type": "public"
+        "q": NetworkManager.shared.makeIngredientsList(), "type": "public"
     ]
+    
+    //
+    // MARK: - Variables And Properties
+    //
+    static var shared = NetworkManager()
     
     private var ingredientListRequest: String {
         makeIngredientsList()
     }
-    var ingredientsList: [String] = []
     
+    var ingredientsList: [String] = []
     var nextPage = ""
     var paginationFinished = true
     
-    func makeIngredientsList() -> String {
-        var ingredientRequest = ""
-        ingredientsList.forEach { ingredient in
-            ingredientRequest += ingredient + " "
-        }
-
-        return ingredientRequest
-    }
+    //
+    // MARK: - Initialization
+    //
+    private init() {}
     
+    //
+    // MARK: - Internal Methods
+    //
     func clearIngredientsList() {
         ingredientsList = []
     }
     
     func deleteIngredient(at index: Int){
         ingredientsList.remove(at: index)
-    }
-        
-    func switchRequest(_ requestStatus: RequestStatus) -> DataRequest {
-        switch requestStatus {
-        case .initial:
-            return AF.request("https://api.edamam.com/api/recipes/v2", parameters: NetworkingClient.parameters)
-        case .following:
-            return AF.request(nextPage)
-        }
-    }
-    
-    func displayIngredientName(_ ingredientsList: [Ingredient]) -> String {
-        var returningString = ""
-        ingredientsList.forEach { ingredient in
-            returningString += ingredient.food + ", "
-        }
-        returningString.removeLast(2)
-        return returningString
-    }
-    
-    func displayIngredientQuantity(_ ingredientsList: [Ingredient]) -> String {
-        var returningString = ""
-        ingredientsList.forEach { ingredient in
-            returningString += "-" + ingredient.text + "\n"
-        }
-        returningString.removeLast(1)
-        return returningString
     }
     
     func checkIngredient() -> Bool {
@@ -78,12 +59,52 @@ class NetworkingClient {
             return true
         }
     }
+    
+    //
+    // MARK: - Private Methods
+    //
+    private func makeIngredientsList() -> String {
+        var ingredientRequest = ""
+        ingredientsList.forEach { ingredient in
+            ingredientRequest += ingredient + " "
+        }
+        return ingredientRequest
+    }
+    
+    private func switchRequest(_ requestStatus: RequestStatus) -> DataRequest {
+        switch requestStatus {
+        case .initial:
+            return AF.request("https://api.edamam.com/api/recipes/v2", parameters: NetworkManager.parameters)
+        case .following:
+            return AF.request(nextPage)
+        }
+    }
+    
+    private func displayIngredientName(_ ingredientsList: [Ingredient]) -> String {
+        var returningString = ""
+        ingredientsList.forEach { ingredient in
+            returningString += ingredient.food + ", "
+        }
+        returningString.removeLast(2)
+        return returningString
+    }
+    
+    private func displayIngredientQuantity(_ ingredientsList: [Ingredient]) -> String {
+        var returningString = ""
+        ingredientsList.forEach { ingredient in
+            returningString += "-" + ingredient.text + "\n"
+        }
+        returningString.removeLast(1)
+        return returningString
+    }
 }
 
-extension NetworkingClient: RequestManager {
+//
+// MARK: - RequestRecipe Protocol
+//
+extension NetworkManager: RequestRecipe {
 
-    
-    func fetchData(_ requestStatus: RequestStatus, successHandler: @escaping ([Recipe]) -> Void, errorHandler: @escaping (String) -> Void) {
+    func fetchRecipe(_ requestStatus: RequestStatus, successHandler: @escaping ([Recipe]) -> Void, errorHandler: @escaping (String) -> Void) {
         paginationFinished = false
         print(8)
         print(ingredientListRequest)
@@ -125,7 +146,5 @@ extension NetworkingClient: RequestManager {
         print(14)
          return onlineRecipies
     }
-    
-    
 }
 

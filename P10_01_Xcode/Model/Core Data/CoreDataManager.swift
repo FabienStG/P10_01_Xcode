@@ -7,18 +7,32 @@
 
 import Foundation
 import CoreData
+//
+// MARK: - Core Data Manager
+//
 
+/// A specific class for managing the Core Data "SavedRecipe" entity
+/// Save a recipe, delete it, create SavedRecipe from Recipe and vice versa
 class CoreDataManager {
-    
+    //
+    // MARK: - Constant
+    //
     static let shared = CoreDataManager()
     
+    //
+    // MARK: - Initialization
+    //
     private init() {}
 
+    //
+    // MARK: - Internal Methods
+    //
     func createRecipeOff(_ responseArray: [SavedRecipe]) -> [Recipe] {
         var recipies: [Recipe] = []
         responseArray.forEach { response in
             let recipe = Recipe(name: response.name!, image: response.image!, recipeURL: response.recipeURL!, duration: response.duration!,
-                                notation: response.notation!, ingredients: response.ingredients!, ingredientsQuantity: response.ingredientsQuantity!, isFavorite: true)
+                                notation: response.notation!, ingredients: response.ingredients!,
+                                ingredientsQuantity: response.ingredientsQuantity!, isFavorite: true)
             recipies.append(recipe)
         }
         return recipies
@@ -50,10 +64,16 @@ class CoreDataManager {
     }
 }
 
-extension CoreDataManager: RequestManager {
+//
+// MARK: - Request Recipe Protocol
+//
+extension CoreDataManager: RequestRecipe {
     
-    func fetchData(_ requestStatus: RequestStatus, successHandler: @escaping([Recipe]) -> Void, errorHandler: @escaping(String) -> Void) {
-        print(8.5)
+    func createRecipe(_ responseArray: [RecipeDecoder.Hit]) -> [Recipe] {
+        return []
+    }
+    
+    func fetchRecipe(_ requestStatus: RequestStatus, successHandler: @escaping([Recipe]) -> Void, errorHandler: @escaping(String) -> Void) {
         let request: NSFetchRequest<SavedRecipe> = SavedRecipe.fetchRequest()
         guard let recipies = try? AppDelegate.viewContext.fetch(request) else {
           return errorHandler("Add a Recipe to your favorites first")
@@ -61,16 +81,7 @@ extension CoreDataManager: RequestManager {
         if recipies.isEmpty {
             return errorHandler("Add a Recipe to your favorites first")
         }
-        print(9.5)
-        print(recipies)
         let result = self.createRecipeOff(recipies)
-        print(13.5)
         successHandler(result)
     }
-    
-    func createRecipe(_ responseArray: [RecipeDecoder.Hit]) -> [Recipe] {
-        return []
-    }
-    
-    
 }

@@ -6,23 +6,36 @@
 //
 
 import Foundation
+//
+// MARK: - RecipeDecoder
+//
 
+///Structure used to decode the JSON response from the Edamam API
 struct RecipeDecoder: Decodable {
-    let _links: Link
-    let hits: [Hit]
-    
+    //
+    // MARK: - Link
+    //
     struct Link: Decodable {
         let next: Next
         
+        //
+        // MARK: - Next
+        //
         struct Next: Decodable {
             let href: String
         }
     }
     
+    //
+    // MARK: - Hit
+    //
     struct Hit: Decodable {
         let recipe: Recipe
     }
 
+    //
+    // MARK: - Recipe
+    //
     struct Recipe: Decodable {
         let label: String
         let image: URL
@@ -31,8 +44,17 @@ struct RecipeDecoder: Decodable {
         let totalTime: Double
         let yield: Int
     }
+    
+    //
+    // MARK: - Constants
+    //
+    let _links: Link
+    let hits: [Hit]
 }
 
+//
+// MARK: - Ingredient
+//
 struct Ingredient: Codable {
     let text: String
     let food: String

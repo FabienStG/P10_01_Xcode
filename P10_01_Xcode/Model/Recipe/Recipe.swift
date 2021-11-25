@@ -6,9 +6,15 @@
 //
 
 import Foundation
+//
+// MARK: - Recipe
+//
 
+/// Structure use to display the Recipe of the user's screen
 struct Recipe {
-    
+    //
+    // MARK: - Variables And Properties
+    //
     var name: String
     var image: URL
     var recipeURL: URL
@@ -17,14 +23,19 @@ struct Recipe {
     var ingredients: String
     var ingredientsQuantity: String
     var isFavorite: Bool
-
 }
 
+//
+// MARK: - Mode
+//
 enum Mode {
     
     case online, offline
 }
 
+//
+// MARK: - RequestStatus
+//
 enum RequestStatus {
     
     case initial, following

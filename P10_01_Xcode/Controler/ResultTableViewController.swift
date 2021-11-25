@@ -6,14 +6,21 @@
 //
 
 import UIKit
-
+//
+// MARK: - Result TableView Controller
+//
 class ResultTableViewController: UITableViewController {
-    
+    //
+    // MARK: - Variables And Properties
+    //
     var mode: Mode = .offline
-
     var isLoadingStarted = false
+    var isReloadRequired = false
     let activityIndicator = UIActivityIndicatorView(style: .medium)
 
+    //
+    // MARK: - View Life Cycle
+    //
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.backgroundView = activityIndicator
@@ -33,6 +40,14 @@ class ResultTableViewController: UITableViewController {
         }
     }
 
+    //
+    // MARK: - Private Methods
+    //
+    private func endLoading() {
+        activityIndicator.stopAnimating()
+        isLoadingStarted = false
+    }
+    
     private func showResult(_ requestStatus: RequestStatus) {
         activityIndicator.startAnimating()
         RecipeDataManager.shared.getRecipies(requestStatus, successHandler: {
@@ -44,13 +59,11 @@ class ResultTableViewController: UITableViewController {
             self.endLoading()
         })
     }
-        
-    private func endLoading() {
-        activityIndicator.stopAnimating()
-        isLoadingStarted = false
-    }
 }
 
+//
+// MARK: - TableView Data Source
+//
 extension ResultTableViewController {
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -61,6 +74,11 @@ extension ResultTableViewController {
         return RecipeDataManager.shared.displayableList.count
     }
     
+    override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+        RecipeDataManager.shared.setSelectedRecipe(RecipeDataManager.shared.displayableList[indexPath.row])
+        return indexPath
+    }
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "recipeCell", for: indexPath) as? RecipeTableViewCell else {
             return UITableViewCell()
@@ -69,25 +87,12 @@ extension ResultTableViewController {
         cell.configure(withRecipe: recipe)
         return cell
     }
-
-    override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-        RecipeDataManager.shared.setSelectedRecipe(RecipeDataManager.shared.displayableList[indexPath.row])
-        return indexPath
-    }
 }
 
+//
+// MARK: - Scroll View
+//
 extension ResultTableViewController {
-    
-    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let offsetY = scrollView.contentOffset.y
-        let contentHeight = scrollView.contentSize.height
-        if offsetY > contentHeight -  scrollView.frame.height {
-            if NetworkingClient.shared.paginationFinished && !isLoadingStarted {
-            isLoadingStarted = true
-            showResult(.following)
-            }
-        }
-    }
     
     override func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         self.isLoadingStarted = true
@@ -95,5 +100,16 @@ extension ResultTableViewController {
     
     override func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         self.isLoadingStarted = false
+    }
+    
+    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let offsetY = scrollView.contentOffset.y
+        let contentHeight = scrollView.contentSize.height
+        if offsetY > contentHeight -  scrollView.frame.height {
+            if NetworkManager.shared.paginationFinished && !isLoadingStarted {
+            isLoadingStarted = true
+            showResult(.following)
+            }
+        }
     }
 }
