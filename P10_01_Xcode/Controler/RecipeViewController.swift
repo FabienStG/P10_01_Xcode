@@ -8,22 +8,39 @@
 import UIKit
 
 class RecipeViewController: UIViewController {
+    
+    @IBOutlet var recipeView: RecipeView!
+    @IBOutlet weak var favoriteButton: UIButton!
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        recipeView.setRecipeView(withRecipe: RecipeDataManager.shared.selectedRecipe!)
+        changeFavoriteButton()
+    }
 
-        // Do any additional setup after loading the view.
+    @IBAction func openLink(_ sender: Any) {
+        didTapOpenLink()
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    private func didTapOpenLink() {
+        if let url = URL(string: "\(RecipeDataManager.shared.selectedRecipe!.recipeURL)") {
+        UIApplication.shared.open(url)
+        }
     }
-    */
-
+    
+    @IBAction func toggleFavorite(_ sender: Any) {
+        RecipeDataManager.shared.checkFavoriteStatus()
+        changeFavoriteButton()
+    }
+    
+    func changeFavoriteButton() {
+        if RecipeDataManager.shared.selectedRecipe!.isFavorite {
+            favoriteButton.setImage(UIImage(systemName: "star.fill"), for: .normal)
+        } else {
+            favoriteButton.setImage(UIImage(systemName: "star"), for: .normal)
+        }
+    }
 }
+
+

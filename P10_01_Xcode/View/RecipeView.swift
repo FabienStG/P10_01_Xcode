@@ -9,12 +9,18 @@ import UIKit
 
 class RecipeView: UIView {
 
-    /*
-    // Only override draw() if you perform custom drawing.
-    // An empty implementation adversely affects performance during animation.
-    override func draw(_ rect: CGRect) {
-        // Drawing code
-    }
-    */
+    @IBOutlet weak var recipeName: UILabel!
+    @IBOutlet weak var ingredientsQuantity: UITextView!
+    @IBOutlet weak var duration: UILabel!
+    @IBOutlet weak var notation: UILabel!
+    @IBOutlet weak var recipeImage: UIImageView!
 
+    func setRecipeView(withRecipe: Recipe) {
+        recipeName.text = withRecipe.name
+        ingredientsQuantity.text = withRecipe.ingredientsQuantity
+        duration.text = withRecipe.duration
+        notation.text = withRecipe.notation
+        recipeImage.loadFromURL(withRecipe.image)
+    }
 }
+
