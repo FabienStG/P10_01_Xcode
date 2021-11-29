@@ -7,6 +7,13 @@ target 'Reciplease' do
 
   # Pods for P10_01_Xcode
 	pod 'Alamofire', '~> 5.4'
+	pod 'Mocker', '~> 2.5.4'
+	pod 'DZNEmptyDataSet'
+	
+target 'RecipleaseTests' do
+	inherit! :search_paths
+	pod 'Alamofire'
+	pod 'Mocker'
 
-
+end
 end

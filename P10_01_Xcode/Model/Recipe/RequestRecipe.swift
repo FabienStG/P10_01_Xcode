@@ -16,6 +16,4 @@ protocol RequestRecipe {
     
     func fetchRecipe(_ requestStatus: RequestStatus, successHandler: @escaping([Recipe]) -> Void, errorHandler: @escaping(String) -> Void)
     
-    func createRecipe(_ responseArray: [RecipeDecoder.Hit]) -> [Recipe]
-    
 }

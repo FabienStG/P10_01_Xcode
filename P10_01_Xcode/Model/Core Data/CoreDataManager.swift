@@ -10,6 +10,7 @@ import CoreData
 //
 // MARK: - Core Data Manager
 //
+public let coreDataStackInit = CoreDataStack()
 
 /// A specific class for managing the Core Data "SavedRecipe" entity
 /// Save a recipe, delete it, create SavedRecipe from Recipe and vice versa
@@ -17,41 +18,39 @@ class CoreDataManager {
     //
     // MARK: - Constant
     //
-    static let shared = CoreDataManager()
+    let managedObjectContext: NSManagedObjectContext
+    let coreDataStack: CoreDataStack
+    
+    //
+    // MARK: - Properties And Variables
+    //
+    static var shared = CoreDataManager(managedObjectContext: coreDataStackInit.mainContext, coreDataStack: coreDataStackInit)
     
     //
     // MARK: - Initialization
     //
-    private init() {}
-
+    init(managedObjectContext: NSManagedObjectContext, coreDataStack: CoreDataStack) {
+        self.managedObjectContext = managedObjectContext
+        self.coreDataStack = coreDataStack
+    }
+    
     //
     // MARK: - Internal Methods
     //
-    func createRecipeOff(_ responseArray: [SavedRecipe]) -> [Recipe] {
-        var recipies: [Recipe] = []
-        responseArray.forEach { response in
-            let recipe = Recipe(name: response.name!, image: response.image!, recipeURL: response.recipeURL!, duration: response.duration!,
-                                notation: response.notation!, ingredients: response.ingredients!,
-                                ingredientsQuantity: response.ingredientsQuantity!, isFavorite: true)
-            recipies.append(recipe)
-        }
-        return recipies
-    }
-    
     func deleteRecipe(name: String){
         let request: NSFetchRequest<SavedRecipe> = SavedRecipe.fetchRequest()
         request.predicate = NSPredicate(format: "name LIKE %@", name)
-        guard let results = try? AppDelegate.viewContext.fetch(request) else {
+        guard let results = try? managedObjectContext.fetch(request) else {
             return
         }
         results.forEach { recipe in
-            AppDelegate.viewContext.delete(recipe)
+            managedObjectContext.delete(recipe)
         }
-        try? AppDelegate.viewContext.save()
+        coreDataStack.saveContext(managedObjectContext)
     }
-    
+
     func saveRecipe(_ recipeToSave: Recipe) {
-        let recipe = SavedRecipe(context: AppDelegate.viewContext)
+        let recipe = SavedRecipe(context: managedObjectContext)
         recipe.name = recipeToSave.name
         recipe.notation = recipeToSave.notation
         recipe.isFavorite = true
@@ -60,7 +59,8 @@ class CoreDataManager {
         recipe.recipeURL = recipeToSave.recipeURL
         recipe.ingredients = recipeToSave.ingredients
         recipe.ingredientsQuantity = recipeToSave.ingredientsQuantity
-    try? AppDelegate.viewContext.save()
+        
+        coreDataStack.saveContext(managedObjectContext)
     }
 }
 
@@ -68,20 +68,24 @@ class CoreDataManager {
 // MARK: - Request Recipe Protocol
 //
 extension CoreDataManager: RequestRecipe {
-    
-    func createRecipe(_ responseArray: [RecipeDecoder.Hit]) -> [Recipe] {
-        return []
-    }
-    
+
     func fetchRecipe(_ requestStatus: RequestStatus, successHandler: @escaping([Recipe]) -> Void, errorHandler: @escaping(String) -> Void) {
         let request: NSFetchRequest<SavedRecipe> = SavedRecipe.fetchRequest()
-        guard let recipies = try? AppDelegate.viewContext.fetch(request) else {
-          return errorHandler("Add a Recipe to your favorites first")
+        guard let recipies = try? managedObjectContext.fetch(request) else {
+          return errorHandler("Error in Core Data")
         }
-        if recipies.isEmpty {
-            return errorHandler("Add a Recipe to your favorites first")
-        }
-        let result = self.createRecipeOff(recipies)
+        let result = self.createRecipe(recipies)
         successHandler(result)
+    }
+    
+    func createRecipe(_ responseArray: [SavedRecipe]) -> [Recipe] {
+        var recipies: [Recipe] = []
+        responseArray.forEach { response in
+            let recipe = Recipe(name: response.name!, image: response.image!, recipeURL: response.recipeURL!, duration: response.duration!,
+                                notation: response.notation!, ingredients: response.ingredients!,
+                                ingredientsQuantity: response.ingredientsQuantity!, isFavorite: true)
+            recipies.append(recipe)
+        }
+        return recipies
     }
 }

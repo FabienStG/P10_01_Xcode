@@ -13,9 +13,7 @@ class ResultTableViewController: UITableViewController {
     //
     // MARK: - Variables And Properties
     //
-    var mode: Mode = .offline
-    var isLoadingStarted = false
-    var isReloadRequired = false
+    var isLoadingStarted = true
     let activityIndicator = UIActivityIndicatorView(style: .medium)
 
     //
@@ -24,20 +22,6 @@ class ResultTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.backgroundView = activityIndicator
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        print(1)
-        RecipeDataManager.shared.setMode(mode: mode)
-        print(2)
-        showResult(.initial)
-    }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.destination is ResultTableViewController {
-            mode = .offline
-        }
     }
 
     //
@@ -48,7 +32,7 @@ class ResultTableViewController: UITableViewController {
         isLoadingStarted = false
     }
     
-    private func showResult(_ requestStatus: RequestStatus) {
+    func showResult(_ requestStatus: RequestStatus) {
         activityIndicator.startAnimating()
         RecipeDataManager.shared.getRecipies(requestStatus, successHandler: {
             self.tableView.reloadData()
@@ -86,30 +70,5 @@ extension ResultTableViewController {
         let recipe = RecipeDataManager.shared.displayableList[indexPath.row]
         cell.configure(withRecipe: recipe)
         return cell
-    }
-}
-
-//
-// MARK: - Scroll View
-//
-extension ResultTableViewController {
-    
-    override func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-        self.isLoadingStarted = true
-    }
-    
-    override func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-        self.isLoadingStarted = false
-    }
-    
-    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let offsetY = scrollView.contentOffset.y
-        let contentHeight = scrollView.contentSize.height
-        if offsetY > contentHeight -  scrollView.frame.height {
-            if NetworkManager.shared.paginationFinished && !isLoadingStarted {
-            isLoadingStarted = true
-            showResult(.following)
-            }
-        }
     }
 }

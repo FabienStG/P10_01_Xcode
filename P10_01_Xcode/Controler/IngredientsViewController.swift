@@ -22,11 +22,10 @@ class IngredientsViewController: UIViewController {
     //
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.reloadData()
     }
     
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
-        if !NetworkManager.shared.checkIngredient() {
+        if !RequestIngredients.shared.checkIngredient() {
             presentAlert(title: "Error", message: "Write ingredient first")
             return false
         }
@@ -34,14 +33,8 @@ class IngredientsViewController: UIViewController {
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if let successVS = segue.destination as? ResultTableViewController {
-            if segue.identifier == "resultSegue" {
-                successVS.mode = .online
-                successVS.isReloadRequired = true
-            } else {
-                successVS.mode = .offline
-                successVS.isReloadRequired = false
-            }
+        if let successVS = segue.destination as? OnlineTableViewController {
+            successVS.isLoadingRequired = true
         }
     }
     
@@ -49,6 +42,7 @@ class IngredientsViewController: UIViewController {
     // MARK: - Internal Methods
     //
     @IBAction func searchButton(_ sender: Any) {
+        RecipeDataManager.shared.removeOnlineList()
     }
     
     @IBAction func addIngredient(_ sender: Any) {
@@ -63,7 +57,7 @@ class IngredientsViewController: UIViewController {
     // MARK: - Private Methods
     //
     private func didTapClear() {
-        NetworkManager.shared.clearIngredientsList()
+        RequestIngredients.shared.clearIngredientsList()
         ingredientTextField.text = ""
         tableView.reloadData()
     }
@@ -71,7 +65,8 @@ class IngredientsViewController: UIViewController {
     private func didTapAdd() {
         if !ingredientTextField.text!.isEmpty {
             if let newIngredient = ingredientTextField.text {
-            NetworkManager.shared.ingredientsList.append(newIngredient)
+            RequestIngredients.shared.ingredientsList.append(newIngredient)
+                print(RequestIngredients.shared.ingredientsList)
             ingredientTextField.text = ""
             tableView.reloadData()
             }
@@ -86,20 +81,20 @@ extension IngredientsViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            NetworkManager.shared.deleteIngredient(at: indexPath.row)
+            RequestIngredients.shared.deleteIngredient(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .automatic)
         }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ingredientCell", for: indexPath)
-        let ingredient = NetworkManager.shared.ingredientsList[indexPath.row]
+        let ingredient = RequestIngredients.shared.ingredientsList[indexPath.row]
         cell.textLabel?.text = ingredient.description
         return cell
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return NetworkManager.shared.ingredientsList.count
+        return RequestIngredients.shared.ingredientsList.count
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {

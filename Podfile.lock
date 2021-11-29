@@ -1,16 +1,26 @@
 PODS:
   - Alamofire (5.4.4)
+  - DZNEmptyDataSet (1.8.1)
+  - Mocker (2.5.5)
 
 DEPENDENCIES:
+  - Alamofire
   - Alamofire (~> 5.4)
+  - DZNEmptyDataSet
+  - Mocker
+  - Mocker (~> 2.5.4)
 
 SPEC REPOS:
   trunk:
     - Alamofire
+    - DZNEmptyDataSet
+    - Mocker
 
 SPEC CHECKSUMS:
   Alamofire: f3b09a368f1582ab751b3fff5460276e0d2cf5c9
+  DZNEmptyDataSet: 9525833b9e68ac21c30253e1d3d7076cc828eaa7
+  Mocker: 8c731a8104962f246cadf2b02556218e9edc1390
 
-PODFILE CHECKSUM: f5a5995be859ed2f8cb84738f4d91ed6bce94b7b
+PODFILE CHECKSUM: 6812aa151ffe827d30931ff08f429d89659d0b16
 
 COCOAPODS: 1.11.2

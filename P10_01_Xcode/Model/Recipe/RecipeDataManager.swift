@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import Alamofire
+import CoreData
 //
 // MARK: - Recipe Data Manager
 //
@@ -18,24 +20,42 @@ class RecipeDataManager {
     //
     static var shared = RecipeDataManager()
     
-    private var mode: Mode = .offline
+    private var mode: Mode = .offline {
+        didSet {
+            displayableList.removeAll()
+            requestRecipe = mode == .offline ? CoreDataManager.shared: NetworkManager.shared
+        }
+    }
     
+    private var onlineRecipe: [Recipe] = []
+    
+    var requestRecipe: RequestRecipe
     var displayableList: [Recipe] = []
     var selectedRecipe: Recipe?
-    
+
     //
     // MARK: - Initialization
     //
-    private init() {}
+    init() {
+        requestRecipe = CoreDataManager.shared
+    }
     
     //
     // MARK: - Internal Methods
     func setMode(mode: Mode) {
         self.mode = mode
     }
-    
+
     func setSelectedRecipe(_ selectedItem: Recipe) {
         selectedRecipe = selectedItem
+    }
+    
+    func removeOnlineList() {
+        onlineRecipe.removeAll()
+    }
+    
+    func showPreviousOnlineRequest() {
+        displayableList = onlineRecipe
     }
     
     func checkFavoriteStatus() {
@@ -49,38 +69,19 @@ class RecipeDataManager {
             return
         }
     }
-    
+
     func getRecipies(_ requestStatus: RequestStatus, successHandler: @escaping() -> Void, errorHandler: @escaping(String) -> Void) {
-        switch requestStatus {
-        case .initial :
+        if requestStatus == .initial {
             displayableList.removeAll()
-            print(displayableList)
-            if mode == .online {
-                NetworkManager.shared.fetchRecipe(requestStatus, successHandler: { recipies in
-                    self.displayableList = recipies
-                    successHandler()
-                }, errorHandler: { error in
-                   return errorHandler(error)
-                })
-            }
-            if mode == .offline {
-                CoreDataManager.shared.fetchRecipe(requestStatus, successHandler: { recipies in
-                    self.displayableList = recipies
-                    successHandler()
-                }, errorHandler: { error in
-                   return errorHandler(error)
-                })
-            }
-            
-        case .following :
-            if mode == .online {
-            NetworkManager.shared.fetchRecipe(requestStatus, successHandler: { recipies in
-                self.displayableList.append(contentsOf: recipies)
-                successHandler()
-            }, errorHandler: { error in
-              return  errorHandler(error)
-            })
-            }
         }
+        requestRecipe.fetchRecipe(requestStatus, successHandler: { recipies in
+            if self.mode == .online {
+                self.onlineRecipe = self.onlineRecipe + recipies
+            }
+            self.displayableList = self.displayableList + recipies
+            successHandler()
+        }, errorHandler: { error in
+           return errorHandler(error)
+        })
     }
 }
