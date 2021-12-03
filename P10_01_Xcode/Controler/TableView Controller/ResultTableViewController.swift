@@ -15,6 +15,7 @@ class ResultTableViewController: UITableViewController {
     //
     var isLoadingStarted = true
     let activityIndicator = UIActivityIndicatorView(style: .medium)
+    let dataManager = RecipeDataManager.shared()
 
     //
     // MARK: - View Life Cycle
@@ -33,8 +34,9 @@ class ResultTableViewController: UITableViewController {
     }
     
     func showResult(_ requestStatus: RequestStatus) {
+        activityIndicator.color = UIColor.white
         activityIndicator.startAnimating()
-        RecipeDataManager.shared.getRecipies(requestStatus, successHandler: {
+        dataManager.getRecipies(requestStatus, successHandler: {
             self.tableView.reloadData()
             self.endLoading()
         }, errorHandler: { error in
@@ -55,11 +57,11 @@ extension ResultTableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return RecipeDataManager.shared.displayableList.count
+        return dataManager.displayableList.count
     }
     
     override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-        RecipeDataManager.shared.setSelectedRecipe(RecipeDataManager.shared.displayableList[indexPath.row])
+        dataManager.setSelectedRecipe(dataManager.displayableList[indexPath.row])
         return indexPath
     }
     
@@ -67,7 +69,7 @@ extension ResultTableViewController {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "recipeCell", for: indexPath) as? RecipeTableViewCell else {
             return UITableViewCell()
         }
-        let recipe = RecipeDataManager.shared.displayableList[indexPath.row]
+        let recipe = dataManager.displayableList[indexPath.row]
         cell.configure(withRecipe: recipe)
         return cell
     }

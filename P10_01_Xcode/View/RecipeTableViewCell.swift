@@ -20,12 +20,14 @@ class RecipeTableViewCell: UITableViewCell {
     @IBOutlet weak var ingredients: UILabel!
     @IBOutlet weak var notation: UILabel!
     @IBOutlet weak var duration: UILabel!
+    @IBOutlet weak var insideSquareView: UIView!
     
     //
     // MARK: - Cell Life Cycle
     //
     override func awakeFromNib() {
         super.awakeFromNib()
+        insideSquareView.setSquareView()
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -36,10 +38,15 @@ class RecipeTableViewCell: UITableViewCell {
     // MARK: - Internal Method
     //
     func configure(withRecipe: Recipe) {
+        backgroundColor = UIColor.black
         recipeName.text = withRecipe.name
         ingredients.text = withRecipe.ingredients
         notation.text = withRecipe.notation
         duration.text = withRecipe.duration
         recipeImage.loadFromURL(withRecipe.image)
+        recipeImage.gradientBlur()
     }
+    
+
 }
+

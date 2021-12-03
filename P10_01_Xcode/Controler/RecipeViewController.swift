@@ -15,14 +15,19 @@ class RecipeViewController: UIViewController {
     //
     @IBOutlet var recipeView: RecipeView!
     @IBOutlet weak var favoriteButton: UIButton!
+    @IBOutlet weak var getDirectionsButton: UIButton!
+    
+    //
+    let dataManager = RecipeDataManager.shared()
     
     //
     // MARK: - View Life Cycle
     //
     override func viewDidLoad() {
         super.viewDidLoad()
-        recipeView.setRecipeView(withRecipe: RecipeDataManager.shared.selectedRecipe!)
+        recipeView.setRecipeView(withRecipe: dataManager.selectedRecipe!)
         changeFavoriteButton()
+        getDirectionsButton.layer.cornerRadius = 5.0
     }
 
     //
@@ -32,7 +37,7 @@ class RecipeViewController: UIViewController {
     }
     
     @IBAction func toggleFavorite(_ sender: Any) {
-        RecipeDataManager.shared.checkFavoriteStatus()
+        dataManager.checkFavoriteStatus()
         changeFavoriteButton()
     }
     
@@ -40,13 +45,13 @@ class RecipeViewController: UIViewController {
     // MARK: - Private Methods
     //
     private func didTapOpenLink() {
-        if let url = URL(string: "\(RecipeDataManager.shared.selectedRecipe!.recipeURL)") {
+        if let url = URL(string: "\(dataManager.selectedRecipe!.recipeURL)") {
         UIApplication.shared.open(url)
         }
     }
     
     private func changeFavoriteButton() {
-        if RecipeDataManager.shared.selectedRecipe!.isFavorite {
+        if dataManager.selectedRecipe!.isFavorite {
             favoriteButton.setImage(UIImage(systemName: "star.fill"), for: .normal)
         } else {
             favoriteButton.setImage(UIImage(systemName: "star"), for: .normal)

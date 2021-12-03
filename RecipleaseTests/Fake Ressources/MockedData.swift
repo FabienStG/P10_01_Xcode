@@ -6,8 +6,19 @@
 //
 
 import Foundation
+@testable import Reciplease
+//
+// MARK: - MockedData
+//
 
+/// Return the FakeRecipeData JSON during the tests to avoid the real server call
 class MockedData {
+    
+    static let fakeRecipe = Recipe(
+        name: "Name", image: fakeURL, recipeURL: fakeURL, duration: "Duration",
+        notation: "Notation", ingredients: "Ingredients", ingredientsQuantity: "Quantity", isFavorite: false)
+    
+    static let fakeURL: URL = URL(string: "test")!
     
     static var correctRecipeData: URL {
         let bundle = Bundle(for: MockedData.self)

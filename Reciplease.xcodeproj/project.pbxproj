@@ -18,11 +18,10 @@
 		D141B892273131A8003DF8F2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D141B890273131A8003DF8F2 /* LaunchScreen.storyboard */; };
 		D1491E1127426E2600B512DD /* RecipeDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1491E1027426E2600B512DD /* RecipeDataManager.swift */; };
 		D1491E1727426E6C00B512DD /* Recipe.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1491E1627426E6C00B512DD /* Recipe.swift */; };
+		D149ADFD2756777200379B32 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D149ADFC2756777200379B32 /* Utils.swift */; };
 		D14D305F274FF650001B78E0 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = D14D305E274FF650001B78E0 /* CoreDataStack.swift */; };
 		D15086FB2754DD710019E013 /* RequestIngredients.swift in Sources */ = {isa = PBXBuildFile; fileRef = D15086FA2754DD710019E013 /* RequestIngredients.swift */; };
-		D151ACCA27552A2800A45243 /* Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = D151ACC927552A2800A45243 /* Test.swift */; };
 		D151ACCC27553A0400A45243 /* RequestIngredientsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = D151ACCB27553A0400A45243 /* RequestIngredientsTest.swift */; };
-		D151ACCE27553D3000A45243 /* FakeRecipe.swift in Sources */ = {isa = PBXBuildFile; fileRef = D151ACCD27553D3000A45243 /* FakeRecipe.swift */; };
 		D1522CC427357F9F008FBA3F /* RecipeDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1522CC327357F9F008FBA3F /* RecipeDecoder.swift */; };
 		D1554E6F2744F632000D5A26 /* Utils+ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1554E6E2744F632000D5A26 /* Utils+ViewController.swift */; };
 		D1554E71274507F4000D5A26 /* RecipeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1554E70274507F4000D5A26 /* RecipeTableViewCell.swift */; };
@@ -73,11 +72,10 @@
 		D141B893273131A8003DF8F2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D1491E1027426E2600B512DD /* RecipeDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeDataManager.swift; sourceTree = "<group>"; };
 		D1491E1627426E6C00B512DD /* Recipe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Recipe.swift; sourceTree = "<group>"; };
+		D149ADFC2756777200379B32 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		D14D305E274FF650001B78E0 /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 		D15086FA2754DD710019E013 /* RequestIngredients.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestIngredients.swift; sourceTree = "<group>"; };
-		D151ACC927552A2800A45243 /* Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Test.swift; sourceTree = "<group>"; };
 		D151ACCB27553A0400A45243 /* RequestIngredientsTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestIngredientsTest.swift; sourceTree = "<group>"; };
-		D151ACCD27553D3000A45243 /* FakeRecipe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeRecipe.swift; sourceTree = "<group>"; };
 		D1522CC327357F9F008FBA3F /* RecipeDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeDecoder.swift; sourceTree = "<group>"; };
 		D1554E6E2744F632000D5A26 /* Utils+ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Utils+ViewController.swift"; sourceTree = "<group>"; };
 		D1554E70274507F4000D5A26 /* RecipeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeTableViewCell.swift; sourceTree = "<group>"; };
@@ -187,7 +185,6 @@
 			isa = PBXGroup;
 			children = (
 				D1491E1027426E2600B512DD /* RecipeDataManager.swift */,
-				D151ACC927552A2800A45243 /* Test.swift */,
 				D15086FA2754DD710019E013 /* RequestIngredients.swift */,
 				D18111DF274E9EE80019F741 /* RequestRecipe.swift */,
 				D1491E1627426E6C00B512DD /* Recipe.swift */,
@@ -201,7 +198,6 @@
 				D19AB06D2754C1BF00119055 /* FakeRecipiesData.json */,
 				D1033C7D2753FA9300ACB03A /* FakeCoreDataStack.swift */,
 				D19AB06F2754C26700119055 /* MockedData.swift */,
-				D151ACCD27553D3000A45243 /* FakeRecipe.swift */,
 			);
 			path = "Fake Ressources";
 			sourceTree = "<group>";
@@ -212,6 +208,7 @@
 				D1DC61CE274690670055C090 /* Core Data */,
 				D1491E18274271C200B512DD /* Network */,
 				D1491E19274271D900B512DD /* Recipe */,
+				D149ADFC2756777200379B32 /* Utils.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -474,6 +471,7 @@
 				D1DC61D2274694150055C090 /* CoreDataManager.swift in Sources */,
 				D1600CC22732784600160A8E /* RecipeViewController.swift in Sources */,
 				D1600CCC27327C7500160A8E /* ApiToken.swift in Sources */,
+				D149ADFD2756777200379B32 /* Utils.swift in Sources */,
 				D1600CC0273277E800160A8E /* IngredientsViewController.swift in Sources */,
 				D1F0ACC52750CB2900E1834C /* OnlineTableViewController.swift in Sources */,
 				D141B888273131A6003DF8F2 /* SceneDelegate.swift in Sources */,
@@ -484,7 +482,6 @@
 				D1522CC427357F9F008FBA3F /* RecipeDecoder.swift in Sources */,
 				D14D305F274FF650001B78E0 /* CoreDataStack.swift in Sources */,
 				D1491E1127426E2600B512DD /* RecipeDataManager.swift in Sources */,
-				D151ACCA27552A2800A45243 /* Test.swift in Sources */,
 				D1491E1727426E6C00B512DD /* Recipe.swift in Sources */,
 				D18111E0274E9EE90019F741 /* RequestRecipe.swift in Sources */,
 				D1554E71274507F4000D5A26 /* RecipeTableViewCell.swift in Sources */,
@@ -496,7 +493,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				D19AB0702754C26700119055 /* MockedData.swift in Sources */,
-				D151ACCE27553D3000A45243 /* FakeRecipe.swift in Sources */,
 				D1033C7C2753FA2A00ACB03A /* CoreDataManagerTest.swift in Sources */,
 				D1033C7E2753FA9300ACB03A /* FakeCoreDataStack.swift in Sources */,
 				D1E9D3502753D5CA00E49067 /* NetworkManagerTest.swift in Sources */,

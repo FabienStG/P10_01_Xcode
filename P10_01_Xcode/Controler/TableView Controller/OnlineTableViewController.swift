@@ -17,7 +17,6 @@ class OnlineTableViewController: ResultTableViewController {
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        print("lancement de la requête ShowResult - 7")
         switchOnlineResult()
     }
     
@@ -26,15 +25,13 @@ class OnlineTableViewController: ResultTableViewController {
             showResult(.initial)
             isLoadingRequired = false
         } else {
-            RecipeDataManager.shared.showPreviousOnlineRequest()
+            dataManager.showPreviousOnlineRequest()
             tableView.reloadData()
         }
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        print("Vue va apparaitre - 2")
-        RecipeDataManager.shared.setMode(mode: mode)
-        print("Refresh de la TableView - 6")
+        dataManager.setMode(mode: mode)
         tableView.reloadData()
     }
 }
@@ -56,7 +53,7 @@ extension OnlineTableViewController {
         let offsetY = scrollView.contentOffset.y
         let contentHeight = scrollView.contentSize.height
         if offsetY > contentHeight -  scrollView.frame.height {
-            if NetworkManager.shared.paginationFinished && !isLoadingStarted {
+            if dataManager.paginationFinished() && !isLoadingStarted {
             isLoadingStarted = true
             showResult(.following)
             }

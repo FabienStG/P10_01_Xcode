@@ -8,8 +8,15 @@
 import Foundation
 import CoreData
 import Reciplease
+//
+// MARK: - FakeCoreDataStack
+//
 
+/// Manage the way to save the data in the test cases by using the memory
 class FakeCoreDataStack: CoreDataStack {
+    //
+    // MARK: - Initialization
+    //
     override init() {
         super.init()
         

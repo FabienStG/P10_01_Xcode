@@ -20,7 +20,7 @@ class RequestIngredients {
     // MARK: - Internal Methods
     //
     func clearIngredientsList() {
-        ingredientsList = []
+        ingredientsList.removeAll()
     }
     
     func deleteIngredient(at index: Int){
@@ -30,13 +30,11 @@ class RequestIngredients {
     func checkIngredient() -> Bool {
         if ingredientsList.isEmpty {
             return false
-        } else {
-            return true
         }
+        return true
     }
     
     func makeIngredientsList() -> String {
-        print("Requête - Création des ingrédients suite - 5")
        var ingredientListRequest = ""
         ingredientsList.forEach { ingredient in
             ingredientListRequest += ingredient + " "

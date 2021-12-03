@@ -16,12 +16,20 @@ class IngredientsViewController: UIViewController {
     @IBOutlet weak var ingredientTextField: UITextField!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var searchButton: UIButton!
+    @IBOutlet weak var addIngredientButton: UIButton!
+    @IBOutlet weak var clearIngredientButton: UIButton!
     
     //
     // MARK: - View Life Cycle
     //
     override func viewDidLoad() {
         super.viewDidLoad()
+        ingredientTextField.delegate = self
+        ingredientTextField.setUnderline()
+        setRadius()
+        let tap = UITapGestureRecognizer(target: self.view, action: #selector(UIView.endEditing))
+        tap.cancelsTouchesInView = false
+        view.addGestureRecognizer(tap)
     }
     
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
@@ -42,7 +50,7 @@ class IngredientsViewController: UIViewController {
     // MARK: - Internal Methods
     //
     @IBAction func searchButton(_ sender: Any) {
-        RecipeDataManager.shared.removeOnlineList()
+        RecipeDataManager.shared().removeOnlineList()
     }
     
     @IBAction func addIngredient(_ sender: Any) {
@@ -62,11 +70,16 @@ class IngredientsViewController: UIViewController {
         tableView.reloadData()
     }
     
+    private func setRadius() {
+        searchButton.layer.cornerRadius = 5.0
+        addIngredientButton.layer.cornerRadius = 5.0
+        clearIngredientButton.layer.cornerRadius = 5.0
+    }
+
     private func didTapAdd() {
         if !ingredientTextField.text!.isEmpty {
             if let newIngredient = ingredientTextField.text {
             RequestIngredients.shared.ingredientsList.append(newIngredient)
-                print(RequestIngredients.shared.ingredientsList)
             ingredientTextField.text = ""
             tableView.reloadData()
             }
@@ -89,7 +102,7 @@ extension IngredientsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ingredientCell", for: indexPath)
         let ingredient = RequestIngredients.shared.ingredientsList[indexPath.row]
-        cell.textLabel?.text = ingredient.description
+        cell.textLabel?.text = "- " + ingredient.description
         return cell
     }
     
@@ -99,5 +112,16 @@ extension IngredientsViewController: UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
+    }
+}
+
+//
+// MARK: - TextField
+//
+extension IngredientsViewController: UITextFieldDelegate {
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        ingredientTextField.resignFirstResponder()
+        return true
     }
 }

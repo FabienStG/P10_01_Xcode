@@ -42,7 +42,7 @@ struct RecipeDecoder: Decodable {
         let url: URL
         let ingredients: [Ingredient]
         let totalTime: Double
-        let yield: Int
+        let yield: Double
     }
     
     //

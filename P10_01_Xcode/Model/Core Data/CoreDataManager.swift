@@ -10,7 +10,6 @@ import CoreData
 //
 // MARK: - Core Data Manager
 //
-public let coreDataStackInit = CoreDataStack()
 
 /// A specific class for managing the Core Data "SavedRecipe" entity
 /// Save a recipe, delete it, create SavedRecipe from Recipe and vice versa
@@ -20,12 +19,7 @@ class CoreDataManager {
     //
     let managedObjectContext: NSManagedObjectContext
     let coreDataStack: CoreDataStack
-    
-    //
-    // MARK: - Properties And Variables
-    //
-    static var shared = CoreDataManager(managedObjectContext: coreDataStackInit.mainContext, coreDataStack: coreDataStackInit)
-    
+
     //
     // MARK: - Initialization
     //
@@ -33,7 +27,7 @@ class CoreDataManager {
         self.managedObjectContext = managedObjectContext
         self.coreDataStack = coreDataStack
     }
-    
+
     //
     // MARK: - Internal Methods
     //

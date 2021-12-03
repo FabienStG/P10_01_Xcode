@@ -25,18 +25,3 @@ struct Recipe {
     var isFavorite: Bool
 }
 
-//
-// MARK: - Mode
-//
-enum Mode {
-    
-    case online, offline
-}
-
-//
-// MARK: - RequestStatus
-//
-enum RequestStatus {
-    
-    case initial, following
-}

@@ -18,12 +18,14 @@ class RecipeDataManager {
     //
     // MARK: - Variables And Properties
     //
-    static var shared = RecipeDataManager()
+    private static var _shared: RecipeDataManager?
     
     private var mode: Mode = .offline {
         didSet {
+            requestRecipe = mode == .offline ? coreDataManager: networkManager
+            if oldValue != mode {
             displayableList.removeAll()
-            requestRecipe = mode == .offline ? CoreDataManager.shared: NetworkManager.shared
+            }
         }
     }
     
@@ -32,16 +34,33 @@ class RecipeDataManager {
     var requestRecipe: RequestRecipe
     var displayableList: [Recipe] = []
     var selectedRecipe: Recipe?
+    
+    //
+    // MARK: - Constants
+    //
+    private let networkManager: NetworkManager
+    private let coreDataManager: CoreDataManager
 
     //
     // MARK: - Initialization
     //
-    init() {
-        requestRecipe = CoreDataManager.shared
+    init(networkManager: NetworkManager, coreDataManager: CoreDataManager) {
+        self.networkManager = networkManager
+        self.coreDataManager = coreDataManager
+        self.requestRecipe = coreDataManager
     }
     
     //
     // MARK: - Internal Methods
+    //
+    static func initialiazed(networkManager: NetworkManager, coreDataManager: CoreDataManager) {
+        _shared = RecipeDataManager(networkManager: networkManager, coreDataManager: coreDataManager)
+    }
+    
+    static func shared() -> RecipeDataManager {
+        return _shared!
+    }
+    
     func setMode(mode: Mode) {
         self.mode = mode
     }
@@ -58,13 +77,17 @@ class RecipeDataManager {
         displayableList = onlineRecipe
     }
     
+    func paginationFinished() ->Bool {
+        return networkManager.paginationFinished
+    }
+    
     func checkFavoriteStatus() {
         if !selectedRecipe!.isFavorite {
             selectedRecipe!.isFavorite = true
-            CoreDataManager.shared.saveRecipe(selectedRecipe!)
+            coreDataManager.saveRecipe(selectedRecipe!)
         } else if selectedRecipe!.isFavorite {
             selectedRecipe?.isFavorite = false
-            CoreDataManager.shared.deleteRecipe(name: selectedRecipe!.name)
+            coreDataManager.deleteRecipe(name: selectedRecipe!.name)
         } else {
             return
         }
@@ -72,6 +95,7 @@ class RecipeDataManager {
 
     func getRecipies(_ requestStatus: RequestStatus, successHandler: @escaping() -> Void, errorHandler: @escaping(String) -> Void) {
         if requestStatus == .initial {
+            print("Send Request, removeAll")
             displayableList.removeAll()
         }
         requestRecipe.fetchRecipe(requestStatus, successHandler: { recipies in

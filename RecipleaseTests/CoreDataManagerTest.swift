@@ -13,9 +13,7 @@ class CoreDataManagerTest: XCTestCase {
 
     var coreDataManager: CoreDataManager!
     var coreDataStack: CoreDataStack!
-    let fakeURL: URL = URL(string: "test")!
-    
-
+   
     override func setUp() {
         super.setUp()
         coreDataStack = FakeCoreDataStack()
@@ -32,14 +30,12 @@ class CoreDataManagerTest: XCTestCase {
         let derivedContext = coreDataStack.newDerivedContext()
         coreDataManager = CoreDataManager(managedObjectContext: derivedContext, coreDataStack: coreDataStack)
         
-        let recipe = Recipe(name: "Name", image: fakeURL, recipeURL: fakeURL, duration: "Duration", notation: "Notation", ingredients: "Ingredients", ingredientsQuantity: "Quantity", isFavorite: true)
-        
         expectation(forNotification: .NSManagedObjectContextDidSave, object: coreDataStack.mainContext) { _ in
             return true
         }
         
         derivedContext.perform {
-            self.coreDataManager.saveRecipe(recipe)
+            self.coreDataManager.saveRecipe(MockedData.fakeRecipe)
         }
         
         waitForExpectations(timeout: 0.5) { error in
@@ -48,9 +44,7 @@ class CoreDataManagerTest: XCTestCase {
     }
     
     func testGetRecipeByFetchRequest() {
-        let recipe = Recipe(name: "Name", image: fakeURL, recipeURL: fakeURL, duration: "Duration", notation: "Notation", ingredients: "Ingredients", ingredientsQuantity: "Quantity", isFavorite: true)
-        
-        coreDataManager.saveRecipe(recipe)
+        coreDataManager.saveRecipe(MockedData.fakeRecipe)
         
         coreDataManager.fetchRecipe(.initial) { recipe in
             XCTAssertNotNil(recipe)
@@ -62,9 +56,7 @@ class CoreDataManagerTest: XCTestCase {
     }
     
     func testDeleteRecipeByNameGiven() {
-        let recipe = Recipe(name: "Name", image: fakeURL, recipeURL: fakeURL, duration: "Duration", notation: "Notation", ingredients: "Ingredients", ingredientsQuantity: "Quantity", isFavorite: true)
-        
-        coreDataManager.saveRecipe(recipe)
+        coreDataManager.saveRecipe(MockedData.fakeRecipe)
         
         coreDataManager.fetchRecipe(.initial) { recipe in
             XCTAssertNotNil(recipe)
@@ -74,7 +66,7 @@ class CoreDataManagerTest: XCTestCase {
             XCTAssertNil(error)
         }
         
-        coreDataManager.deleteRecipe(name: recipe.name)
+        coreDataManager.deleteRecipe(name: MockedData.fakeRecipe.name)
         
         coreDataManager.fetchRecipe(.initial) { recipe in
             XCTAssertTrue(recipe.isEmpty)

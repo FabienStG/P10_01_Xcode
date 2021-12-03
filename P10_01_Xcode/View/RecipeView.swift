@@ -20,7 +20,8 @@ class RecipeView: UIView {
     @IBOutlet weak var duration: UILabel!
     @IBOutlet weak var notation: UILabel!
     @IBOutlet weak var recipeImage: UIImageView!
-
+    @IBOutlet weak var insideSquareView: UIView!
+    
     //
     // MARK: - Internal Method
     //
@@ -30,6 +31,18 @@ class RecipeView: UIView {
         duration.text = withRecipe.duration
         notation.text = withRecipe.notation
         recipeImage.loadFromURL(withRecipe.image)
+        setVisualEffects()
+    }
+    
+    //
+    // MARK: - Private Method
+    //
+    private func setVisualEffects() {
+        recipeImage.gradientBlur()
+        insideSquareView.setSquareView()
+        recipeName.adjustsFontSizeToFitWidth = true
+        recipeName.minimumScaleFactor = 0.2
+        recipeName.numberOfLines = 0
     }
 }
 

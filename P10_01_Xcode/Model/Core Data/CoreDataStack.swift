@@ -7,8 +7,17 @@
 
 import Foundation
 import CoreData
+//
+// MARK: - CoreDataStack
+//
 
+/// Open Class CoreDataStack
+/// The class manage the context and allowed to create storeContainer for the test.
+/// It manage the saving of the data asynchrone
 open class CoreDataStack {
+    //
+    // MARK: - Constants
+    //
     public static let modelName = "Reciplease"
 
     public static let model: NSManagedObjectModel = {
@@ -18,9 +27,15 @@ open class CoreDataStack {
     }()
     // swiftlint:enable force_unwrapping
 
+    //
+    // MARK: - Initialization
+    //
     public init() {
     }
 
+    //
+    // MARK: - Properties and Variables
+    //
     public lazy var mainContext: NSManagedObjectContext = {
       return self.storeContainer.viewContext
     }()
@@ -35,6 +50,9 @@ open class CoreDataStack {
       return container
     }()
 
+    //
+    // MARK: - Internal Methods
+    //
     public func newDerivedContext() -> NSManagedObjectContext {
       let context = storeContainer.newBackgroundContext()
       return context

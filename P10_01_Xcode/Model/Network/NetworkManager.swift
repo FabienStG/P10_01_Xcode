@@ -18,8 +18,6 @@ class NetworkManager {
     //
     // MARK: - Variables And Properties
     //
-    static var shared = NetworkManager()
-
     var nextPage = ""
     var paginationFinished = true
     
@@ -32,8 +30,6 @@ class NetworkManager {
         self.recipeSession = recipeSession
     }
     
-    private init() {}
-
     //
     // MARK: - Private Methods
     //
@@ -84,7 +80,7 @@ extension NetworkManager: RequestRecipe {
              let ingredients = response.recipe.ingredients
              let recipe = Recipe(
                  name: response.recipe.label, image: response.recipe.image, recipeURL: response.recipe.url,
-                 duration: String(response.recipe.totalTime), notation: String(response.recipe.yield), ingredients: displayIngredientName(ingredients),
+                 duration: Int(response.recipe.totalTime).inHours(), notation: Int(response.recipe.yield).noteReturn(), ingredients: displayIngredientName(ingredients),
                  ingredientsQuantity: displayIngredientQuantity(ingredients), isFavorite: false)
              onlineRecipies.append(recipe)
          }
