@@ -6,9 +6,9 @@
 //
 
 import XCTest
-@testable import Reciplease
 import Alamofire
 import Mocker
+@testable import Reciplease
 
 class NetworkManagerTest: XCTestCase {
 

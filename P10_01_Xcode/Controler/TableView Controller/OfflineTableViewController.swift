@@ -7,18 +7,25 @@
 
 import UIKit
 import DZNEmptyDataSet
+//
+// MARK: - Offline TableViewController
+//
 
+/// Class inherit from ResultTableview Controller and manage the offline/CoreData
 class OfflineTableViewController: ResultTableViewController {
-
+    //
+    // MARK: - Variables And Properties
+    //
     var mode: Mode = .offline
     
+    //
+    // MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tableView.emptyDataSetSource = self
         self.tableView.emptyDataSetDelegate = self
     }
   
-    
     override func viewDidAppear(_ animated: Bool) {
         showResult(.initial)
     }
@@ -29,7 +36,14 @@ class OfflineTableViewController: ResultTableViewController {
     }
 }
 
+//
+// MARK: - DNZ Empty Data Source
+//
 extension OfflineTableViewController: DZNEmptyDataSetSource, DZNEmptyDataSetDelegate {
+    
+    func backgroundColor(forEmptyDataSet scrollView: UIScrollView!) -> UIColor! {
+        return UIColor.darkGray
+    }
     
     func title(forEmptyDataSet scrollView: UIScrollView!) -> NSAttributedString! {
         let text = "You haven't any favorite yet."
@@ -51,9 +65,5 @@ extension OfflineTableViewController: DZNEmptyDataSetSource, DZNEmptyDataSetDele
             NSAttributedString.Key.foregroundColor: UIColor.white,
             NSAttributedString.Key.paragraphStyle: para]
         return NSAttributedString(string: text, attributes: attribs)
-    }
-    
-    func backgroundColor(forEmptyDataSet scrollView: UIScrollView!) -> UIColor! {
-        return UIColor.darkGray
     }
 }

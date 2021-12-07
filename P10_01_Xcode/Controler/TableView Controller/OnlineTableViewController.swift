@@ -7,11 +7,21 @@
 
 import UIKit
 
+//
+// MARK: - Online Tableview Controller
+//
+
+/// Inerhit from ResultTableView Controller and manage the online results
 class OnlineTableViewController: ResultTableViewController {
-    
+    //
+    // MARK: - Variables And Properties
+    //
     var isLoadingRequired = true
     var mode: Mode = .online
 
+    //
+    // MARK: - View Life Cycle
+    //
     override func viewDidLoad() {
         super.viewDidLoad()
     }
@@ -20,7 +30,15 @@ class OnlineTableViewController: ResultTableViewController {
         switchOnlineResult()
     }
     
-    func switchOnlineResult() {
+    override func viewWillAppear(_ animated: Bool) {
+        dataManager.setMode(mode: mode)
+        tableView.reloadData()
+        }
+    
+    //
+    // MARK: - Private Methods
+    //
+    private func switchOnlineResult() {
         if isLoadingRequired {
             showResult(.initial)
             isLoadingRequired = false
@@ -28,11 +46,6 @@ class OnlineTableViewController: ResultTableViewController {
             dataManager.showPreviousOnlineRequest()
             tableView.reloadData()
         }
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        dataManager.setMode(mode: mode)
-        tableView.reloadData()
     }
 }
 

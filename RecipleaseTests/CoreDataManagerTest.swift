@@ -6,8 +6,8 @@
 //
 
 import XCTest
-@testable import Reciplease
 import CoreData
+@testable import Reciplease
 
 class CoreDataManagerTest: XCTestCase {
 
