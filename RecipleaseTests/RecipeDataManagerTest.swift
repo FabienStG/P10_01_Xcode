@@ -34,17 +34,8 @@ class RecipeDataManagerTest: XCTestCase {
         coreDataStack = nil
         session = nil
     }
-    
-    
-    func testSetModeOffline() {
 
-        recipeDataManager.displayableList.append(MockedData.fakeRecipe)
-        XCTAssertFalse(recipeDataManager.displayableList.isEmpty)
-        recipeDataManager.setMode(mode: .offline)
-        XCTAssertTrue(recipeDataManager.displayableList.isEmpty)
-    }
-    
-    func testSetModeOnline() {
+    func testSetMode() {
     
         recipeDataManager.displayableList.append(MockedData.fakeRecipe)
         XCTAssertFalse(recipeDataManager.displayableList.isEmpty)
