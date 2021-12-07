@@ -71,6 +71,7 @@ class RecipeDataManager {
     
     func removeOnlineList() {
         onlineRecipe.removeAll()
+        displayableList.removeAll()
     }
     
     func showPreviousOnlineRequest() {
